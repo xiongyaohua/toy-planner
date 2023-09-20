@@ -1,0 +1,106 @@
+[gd_scene load_steps=5 format=3 uid="uid://dimskvb4xmuop"]
+
+[ext_resource type="Texture2D" uid="uid://6ip43l8xf0q1" path="res://asset/sprites.png" id="1_lyhpk"]
+
+[sub_resource type="Animation" id="Animation_f4nnk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LabelOut/Out:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-22, 3)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LabelIn/In:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-22, 14)]
+}
+
+[sub_resource type="Animation" id="Animation_lnwcn"]
+resource_name = "arrow_move"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LabelOut/Out:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.3, 1),
+"update": 0,
+"values": [Vector2(-22, 3), Vector2(-22, -3)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("LabelIn/In:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.3, 1),
+"update": 0,
+"values": [Vector2(-22, 14), Vector2(-22, 20)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3rivt"]
+_data = {
+"RESET": SubResource("Animation_f4nnk"),
+"arrow_move": SubResource("Animation_lnwcn")
+}
+
+[node name="Zone" type="Node2D"]
+
+[node name="House" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_lyhpk")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+metadata/_edit_lock_ = true
+
+[node name="LabelOut" type="Label" parent="."]
+offset_left = 72.0
+offset_top = -28.0
+offset_right = 112.0
+offset_bottom = -5.0
+text = "500"
+
+[node name="Out" type="Sprite2D" parent="LabelOut"]
+position = Vector2(-22, 3)
+texture = ExtResource("1_lyhpk")
+region_enabled = true
+region_rect = Rect2(64, 0, 32, 32)
+
+[node name="LabelIn" type="Label" parent="."]
+offset_left = 71.0
+offset_top = 5.0
+offset_right = 111.0
+offset_bottom = 28.0
+text = "300"
+
+[node name="In" type="Sprite2D" parent="LabelIn"]
+position = Vector2(-22, 14)
+texture = ExtResource("1_lyhpk")
+region_enabled = true
+region_rect = Rect2(64, 32, 32, 32)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "arrow_move"
+libraries = {
+"": SubResource("AnimationLibrary_3rivt")
+}
