@@ -35,21 +35,25 @@ func add_node(p_position: Vector2, p_is_zone: bool = false) -> TNode:
 func has_node(p_id: int) -> bool:
 	return _nodes.has(p_id)
 
-func add_link(p_from: int, p_to: int, p_capacity: float=3600.0) -> TLink:
+func add_link(p_from: int, p_to: int, p_capacity: float=3600.0, p_bidirection: bool=true) -> TLink:
 	assert(has_node(p_from))
 	assert(has_node(p_to))
 	
-	var p1:Vector2 = _nodes[p_from].position
-	var p2:Vector2 = _nodes[p_to].position
-	var length := p1.distance_to(p2)
-	var id := Vector2i(p_from, p_to) # Abuse Vector2i for tuple
-	var link := TLink.new(id)
-	link.capacity = p_capacity
-	link.length = length
-	
-	_links[link.id] = link
-	connect_points(p_from, p_to)
-	return link
+	if not p_bidirection:
+		var p1:Vector2 = _nodes[p_from].position
+		var p2:Vector2 = _nodes[p_to].position
+		var length := p1.distance_to(p2)
+		var id := Vector2i(p_from, p_to) # Abuse Vector2i for tuple
+		var link := TLink.new(id)
+		link.capacity = p_capacity
+		link.length = length
+		
+		_links[link.id] = link
+		connect_points(p_from, p_to, false)
+		return link
+	else:
+		add_link(p_to, p_from, p_capacity, false)
+		return add_link(p_from, p_to, p_capacity, false)
 	
 func has_link(p_from, p_to) -> bool:
 	return _links.has(Vector2i(p_from, p_to))

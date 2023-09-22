@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://bn6rvwqbhax0g"]
+
+[ext_resource type="Shader" path="res://PathFlow.gdshader" id="1_78np0"]
+[ext_resource type="Script" path="res://PathFlow.gd" id="2_ra8sf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cntgo"]
+resource_local_to_scene = true
+shader = ExtResource("1_78np0")
+shader_parameter/speed = 10.0
+
+[sub_resource type="Gradient" id="Gradient_se1d2"]
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.324022, 1)
+colors = PackedColorArray(0.72549, 0.839216, 0.568627, 0.184314, 0.696875, 0.363273, 0.144966, 1, 1, 0.643902, 0.384923, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n3g24"]
+gradient = SubResource("Gradient_se1d2")
+width = 4
+
+[node name="PathFlow" type="Line2D"]
+z_index = 10
+texture_repeat = 2
+material = SubResource("ShaderMaterial_cntgo")
+texture = SubResource("GradientTexture1D_n3g24")
+texture_mode = 1
+script = ExtResource("2_ra8sf")
