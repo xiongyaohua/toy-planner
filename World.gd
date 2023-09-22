@@ -10,17 +10,21 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var node1 :=_network.add_node(Vector2(100, 100), true)	
-	var node2 :=_network.add_node(Vector2(700, 100))	
-	var node3 :=_network.add_node(Vector2(700, 600))	
-	var node4 :=_network.add_node(Vector2(1000, 300), true)
+	var node0 :=_network.add_node(Vector2(100, 100), true)	
+	var node1 :=_network.add_node(Vector2(700, 100))	
+	var node2 :=_network.add_node(Vector2(700, 600))	
+	var node3 :=_network.add_node(Vector2(1000, 300), true)
 
-	_network.add_link(node1, node2)	
-	_network.add_link(node1, node3)	
-	_network.add_link(node2, node4)	
-	_network.add_link(node3, node4)
+	var link1 := _network.add_link(node0.id, node1.id)	
+	link1.speed = 1.0
+	_network.add_link(node0.id, node2.id)	
+	_network.add_link(node1.id, node3.id)	
+	_network.add_link(node2.id, node3.id)
 
 	update_zones()
+	
+	print(node0.id, node3.id)
+	print(_network.get_id_path(node0.id, node3.id))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
