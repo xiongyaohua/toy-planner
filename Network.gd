@@ -3,12 +3,15 @@ class_name Network
 
 var _nodes := {}
 var _links := {}
+var _pathes := {}
 
 class TNode:
 	static var max_id := 0
 	var id := -1
 	var position: Vector2 = Vector2()
 	var is_zone: bool = false
+	var produce: float = 0.0
+	var attract: float = 0.0
 	func _init():
 		id = max_id
 		max_id += 1
@@ -22,10 +25,12 @@ class TLink:
 	func _init(p_id: Vector2i):
 		id = p_id
 
-func add_node(p_position: Vector2, p_is_zone: bool = false) -> TNode:
+func add_node(p_position: Vector2, p_is_zone: bool = false, p_produce:float=0.0, p_attract:float=0.0) -> TNode:
 	var node = TNode.new()
 	node.position = p_position
 	node.is_zone = p_is_zone
+	node.attract = p_attract
+	node.produce = p_produce
 	
 	_nodes[node.id] = node
 	add_point(node.id, node.position)
@@ -72,6 +77,21 @@ func _estimate_cost(p_from: int, p_to: int) -> float:
 	
 func bpr(p_flow: float, p_capacity: float) -> float:
 	var saturation := p_flow / p_capacity
-	return 1 + 10.0 * saturation ** 2
+	return 1 + 1.0 * saturation ** 2
+	
+# Assignment related methods
+func update_link_flow():
+	for link in _links.values():
+		link.flow = 0.0
+		
+	for od_bundle in _pathes.values():
+		for path in od_bundle:
+			var path_flow: float = od_bundle[path]
+			
+			for i in range(path.size() - 1):
+				var link := Vector2i(path[i], path[i+1])
+				_links[link].flow += path_flow
+				
+		
 
 
