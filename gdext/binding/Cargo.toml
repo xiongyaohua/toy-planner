@@ -9,7 +9,8 @@ edition = "2021"
 crate-type = ["staticlib"]
 
 [dependencies]
+cxx = { version = "1.0.107", features = ["c++14"] }
 petgraph = "0.6.4"
 
 [build-dependencies]
-cbindgen = "0.26.0"
+cxx-build = "1.0.107"
