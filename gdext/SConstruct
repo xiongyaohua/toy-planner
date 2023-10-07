@@ -16,17 +16,39 @@ env = SConscript("godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
+# generate cxx bindings
+rust_libname = 'libbinding.a'
+
+if env["target"] == "template_release":
+    rust_lib = 'target/release/' + rust_libname
+    cargo_action = "cargo build --release"
+else:
+    rust_lib = 'target/debug/' + rust_libname
+    cargo_action = "cargo build"
+
+cxxbridge_path = 'target/cxxbridge/binding/src/'
+cxxbridge_header = cxxbridge_path + 'lib.rs.h'
+cxxbridge_source = cxxbridge_path + 'lib.rs.cc'
+
+# Build rust
+cxx_binding = env.Command(
+        target=[rust_lib, cxxbridge_header, cxxbridge_source],
+        source=[],
+        action=cargo_action, 
+        )
+AlwaysBuild(cxx_binding)
+
 if env["platform"] == "macos":
     library = env.SharedLibrary(
         "project/bin/libgdplanet.{}.{}.framework/libgdplanet.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
-        source=sources,
+        source=sources, LIBS=cxx_binding[0]
     )
 else:
     library = env.SharedLibrary(
         "project/bin/libgdplanet{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source=sources,
+        source=sources, LIBS=cxx_binding[0]
     )
 
 Default(library)

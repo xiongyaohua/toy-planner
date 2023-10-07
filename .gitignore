@@ -2,5 +2,7 @@
 .godot
 target/**
 gdext/target/**
+gdext/project/bin/**
 Cargo.lock
+**/.sconsign.dblite
 *.*~
