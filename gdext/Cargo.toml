@@ -11,6 +11,3 @@ crate-type = ["staticlib"]
 [dependencies]
 cxx = { version = "1.0.107", features = ["c++14"] }
 petgraph = "0.6.4"
-
-[build-dependencies]
-cxx-build = "1.0.107"
