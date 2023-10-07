@@ -5,4 +5,5 @@ gdext/target/**
 gdext/project/bin/**
 Cargo.lock
 **/.sconsign.dblite
+**/*.os
 *.*~

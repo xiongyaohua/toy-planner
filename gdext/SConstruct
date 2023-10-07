@@ -13,8 +13,8 @@ env = SConscript("godot-cpp/SConstruct")
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/"])
-sources = Glob("src/*.cpp")
+env.Append(CPPPATH=["src-cpp/"])
+sources = Glob("src-cpp/*.cpp")
 
 # generate cxx bindings
 rust_libname = 'libbinding.a'
@@ -38,17 +38,19 @@ cxx_binding = env.Command(
         )
 AlwaysBuild(cxx_binding)
 
+env.Append(LIBS=cxx_binding[0])
+
 if env["platform"] == "macos":
     library = env.SharedLibrary(
         "project/bin/libgdplanet.{}.{}.framework/libgdplanet.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
-        source=sources, LIBS=cxx_binding[0]
+        source=sources,
     )
 else:
     library = env.SharedLibrary(
         "project/bin/libgdplanet{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-        source=sources, LIBS=cxx_binding[0]
+        source=sources,
     )
 
 Default(library)
