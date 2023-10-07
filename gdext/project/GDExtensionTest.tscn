@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c4fft8qe43ref"]
+
+[node name="GdExtensionTest" type="Node2D"]
+
+[node name="Example" type="Example" parent="."]
+property_from_list = Vector3(0, 1.165, 0)
+dproperty_0 = Vector2(0.585, 0)
+offset_right = 40.0
+offset_bottom = 40.0
