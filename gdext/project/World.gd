@@ -59,7 +59,7 @@ func _draw() -> void:
 		var link_width: float = LINK_WIDTH * (capacity / 3600.0)
 		var flow = _network._links[link].flow
 		var saturation = flow / capacity
-		var link_color: Color = LINK_COLOR.sample()
+		var link_color: Color = LINK_COLOR.sample(saturation)
 		draw_line(pos1+side*11.0, pos2+side*11.0, link_color, link_width)
 	
 	for node in _network._nodes.values():

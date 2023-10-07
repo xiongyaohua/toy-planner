@@ -1,11 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://5h1simglu7vp"]
+[gd_scene load_steps=3 format=3 uid="uid://5h1simglu7vp"]
 
 [ext_resource type="Script" path="res://World.gd" id="1_yjpnd"]
+
+[sub_resource type="Gradient" id="Gradient_rfdgx"]
+offsets = PackedFloat32Array(0, 0.506579, 1)
+colors = PackedColorArray(1.29953e-06, 0.824145, 0.190156, 1, 0.933333, 0.984314, 0, 1, 1, 0, 0, 1)
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_yjpnd")
 NODE_COLOR = Color(0.168627, 0.180392, 0.384314, 1)
-LINK_COLOR = Color(0.133333, 0.388235, 0.607843, 1)
+LINK_COLOR = SubResource("Gradient_rfdgx")
 metadata/_edit_lock_ = true
 
 [node name="Zones" type="Node2D" parent="."]
