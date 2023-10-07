@@ -12,6 +12,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "example.h"
+#include "network.h"
 #include "tests.h"
 
 using namespace godot;
@@ -26,6 +27,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<Example>();
 	ClassDB::register_class<ExampleVirtual>(true);
 	ClassDB::register_abstract_class<ExampleAbstract>();
+	
+	ClassDB::register_class<TNetwork>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

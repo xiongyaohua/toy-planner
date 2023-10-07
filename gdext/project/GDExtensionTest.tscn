@@ -1,9 +1,30 @@
-[gd_scene format=3 uid="uid://c4fft8qe43ref"]
+[gd_scene load_steps=2 format=3 uid="uid://c4fft8qe43ref"]
+
+[sub_resource type="GDScript" id="GDScript_2p8t3"]
+script/source = "extends Node2D
+
+var network: TNetwork
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	network = TNetwork.new()
+	print(network.get_node_count())
+	network.add_node(\"aaa\")
+	print(network.get_node_count())
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
 
 [node name="GdExtensionTest" type="Node2D"]
+script = SubResource("GDScript_2p8t3")
+
+[node name="ExampleMin" type="ExampleMin" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="Example" type="Example" parent="."]
-property_from_list = Vector3(0, 1.165, 0)
-dproperty_0 = Vector2(0.585, 0)
 offset_right = 40.0
 offset_bottom = 40.0
