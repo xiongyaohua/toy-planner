@@ -1,15 +1,26 @@
+use glam::Vec2;
 use petgraph::prelude::*;
 
+use crate::path::{Path, PathFlow, PathFlowBundle};
+
+#[derive(Debug)]
 pub struct EdgeInfo {
-    name: String,
-    lane_count: u16,
-    capacity: f32,
-    length: f32,
-    free_speed: f32,
+    pub name: String,
+    pub lane_count: u16,
+    pub capacity: f32,
+    pub length: f32,
+    pub free_speed: f32,
 }
 
-type Graph = StableDiGraph<String, EdgeInfo, u32>;
+#[derive(Debug)]
+pub struct NodeInfo {
+    pub name: String,
+    pub position: Vec2,
+}
 
+type Graph = StableDiGraph<NodeInfo, EdgeInfo, u32>;
+
+#[derive(Debug)]
 pub struct ReducedNetwork {
     graph: Graph,
 }
@@ -21,11 +32,11 @@ impl ReducedNetwork {
         }
     }
 
-    pub fn add_node(&mut self, name: &str) -> NodeIndex {
-        self.graph.add_node(name.into())
+    pub fn add_node(&mut self, info: NodeInfo) -> NodeIndex {
+        self.graph.add_node(info)
     }
 
-    pub fn remove_node(&mut self, id: NodeIndex) -> Option<String> {
+    pub fn remove_node(&mut self, id: NodeIndex) -> Option<NodeInfo> {
         self.graph.remove_node(id)
     }
 
@@ -39,5 +50,26 @@ impl ReducedNetwork {
 
     pub fn remove_edge(&mut self, e: EdgeIndex) -> Option<EdgeInfo> {
         self.graph.remove_edge(e)
+    }
+
+    pub fn debug_dump(&self) -> String {
+        format!("{:#?}", self)
+    }
+
+    pub fn shortest_path<F>(&self, id_from: NodeIndex, id_to: NodeIndex, edge_cost: F) -> Option<(f32, Path)>
+    where F: FnMut(NodeIndex) -> f32,
+    {
+        unimplemented!("Stub");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let network = ReducedNetwork::new();
+        assert!(network.debug_dump().starts_with("ReducedNetwork"));
     }
 }
