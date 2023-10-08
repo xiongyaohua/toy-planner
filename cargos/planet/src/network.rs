@@ -20,7 +20,10 @@ pub struct NodeInfo {
 
 type Graph = StableDiGraph<NodeInfo, EdgeInfo, u32>;
 
-#[derive(Debug)]
+/// Abstract network for calculation
+/// 
+/// It should be 'immutable' after built up.
+#[derive(Debug, Default)]
 pub struct ReducedNetwork {
     graph: Graph,
 }
@@ -36,20 +39,12 @@ impl ReducedNetwork {
         self.graph.add_node(info)
     }
 
-    pub fn remove_node(&mut self, id: NodeIndex) -> Option<NodeInfo> {
-        self.graph.remove_node(id)
-    }
-
     pub fn add_edge(&mut self, id_from: NodeIndex, id_to: NodeIndex, info: EdgeInfo) -> Option<EdgeIndex> {
         (
             self.graph.contains_node(id_from)
             & self.graph.contains_node(id_to)
             & !self.graph.contains_edge(id_from, id_to)
         ).then(|| self.graph.add_edge(id_from, id_to, info))
-    }
-
-    pub fn remove_edge(&mut self, e: EdgeIndex) -> Option<EdgeInfo> {
-        self.graph.remove_edge(e)
     }
 
     pub fn debug_dump(&self) -> String {
