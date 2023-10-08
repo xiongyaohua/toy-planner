@@ -20,7 +20,3 @@ func _process(delta):
 
 [node name="GdExtensionTest" type="Node2D"]
 script = SubResource("GDScript_2p8t3")
-
-[node name="ExampleMin" type="ExampleMin" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
