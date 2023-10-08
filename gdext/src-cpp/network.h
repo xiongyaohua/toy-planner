@@ -22,8 +22,8 @@ public:
 	TNetwork() : _network(network_new()) {}
 	~TNetwork() {}
 
-    size_t add_node(const String &p_name) { return _network->add_node(p_name.utf8().get_data()); }
-    size_t get_node_count() { return _network->node_count(); }
+    uint64_t add_node(const String &p_name) { return _network->add_node(p_name.utf8().get_data()); }
+    uint64_t get_node_count() { return _network->node_count(); }
 };
 
 #endif  // TNETWORK_CLASS_H
