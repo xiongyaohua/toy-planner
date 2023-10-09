@@ -1,3 +1,5 @@
+extern crate nalgebra_glm as glm;
+
 pub mod network;
 pub mod path;
 

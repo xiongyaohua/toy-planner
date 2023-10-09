@@ -1,4 +1,4 @@
-use glam::Vec2;
+use glm::Vec2;
 use petgraph::prelude::*;
 
 use crate::path::{Path, PathFlow, PathFlowBundle};
