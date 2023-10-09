@@ -1,8 +1,41 @@
-use petgraph::prelude::*;
+use crate::network::*;
+use itertools::Itertools;
 use std::collections::HashMap;
 
 #[derive(Default, PartialEq, Eq, Hash, Clone)]
-pub struct Path(Vec<NodeIndex<u32>>);
+pub struct Path {
+    edges: Vec<EdgeIndex>,
+    origin: NodeIndex,
+    destination: NodeIndex,
+}
+
+impl Path {
+    /// Check nodes are simple path of at least 2 valid consequitive nodes in a network.
+    pub fn new(nodes: Vec<NodeIndex>, network: &ReducedNetwork) -> Option<Self> {
+        let mut iter = nodes.iter().tuple_windows::<(_, _)>();
+
+        let edges: Option<Vec<EdgeIndex>> = iter
+            .map(|(from, to)| network.find_edge(*from, *to))
+            .collect();
+
+        match edges {
+            None => None,
+            Some(edges) => (!edges.is_empty()).then_some(Path {
+                edges,
+                origin: *nodes.first().unwrap(),
+                destination: *nodes.last().unwrap(),
+            }),
+        }
+    }
+
+    pub fn origin(&self) -> NodeIndex {
+        self.origin
+    }
+
+    pub fn destination(&self) -> NodeIndex {
+        self.destination
+    }
+}
 
 pub struct PathFlow {
     pub path: Path,
@@ -19,7 +52,24 @@ impl PathFlow {
 pub struct PathFlowBundle(HashMap<Path, f32>);
 
 impl PathFlowBundle {
-    fn add_flow(&mut self, path: Path, flow: f32) {
-        self.0.entry(path);
+    pub fn add_path(&mut self, path: Path, flow: f32) {
+        self.0
+            .entry(path)
+            .and_modify(|f| {
+                *f += flow;
+            })
+            .or_insert(flow);
+    }
+
+    pub fn clear(&mut self) {
+        self.0.clear();
+    }
+
+    pub fn scale(&mut self, scale: f32) {
+        self.0.values_mut().for_each(|value| *value *= scale);
+    }
+
+    pub fn flow_map(&self) -> HashMap<EdgeIndex, f32> {
+        !unimplemented!()
     }
 }

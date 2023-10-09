@@ -1,5 +1,5 @@
 use glm::Vec2;
-use petgraph::prelude::*;
+use petgraph::prelude as petgraph;
 
 use crate::path::{Path, PathFlow, PathFlowBundle};
 
@@ -18,11 +18,16 @@ pub struct NodeInfo {
     pub position: Vec2,
 }
 
-type Graph = StableDiGraph<NodeInfo, EdgeInfo, u32>;
+type Graph = petgraph::StableDiGraph<NodeInfo, EdgeInfo, u32>;
+pub type NodeIndex = petgraph::NodeIndex<u32>;
+pub type EdgeIndex = petgraph::EdgeIndex<u32>;
 
 /// Abstract network for calculation
-/// 
-/// It should be 'immutable' after built up.
+///
+/// - It should be 'immutable' after built up. So there are only 'add' methods
+///   and no 'remove' methods for nodes and edges.
+/// - It forbids parallel links and self links.
+///
 #[derive(Debug, Default)]
 pub struct ReducedNetwork {
     graph: Graph,
@@ -31,7 +36,7 @@ pub struct ReducedNetwork {
 impl ReducedNetwork {
     pub fn new() -> Self {
         ReducedNetwork {
-            graph: Graph::new()
+            graph: Graph::new(),
         }
     }
 
@@ -39,20 +44,34 @@ impl ReducedNetwork {
         self.graph.add_node(info)
     }
 
-    pub fn add_edge(&mut self, id_from: NodeIndex, id_to: NodeIndex, info: EdgeInfo) -> Option<EdgeIndex> {
-        (
-            self.graph.contains_node(id_from)
-            & self.graph.contains_node(id_to)
-            & !self.graph.contains_edge(id_from, id_to)
-        ).then(|| self.graph.add_edge(id_from, id_to, info))
+    pub fn add_edge(
+        &mut self,
+        node_from: NodeIndex,
+        node_to: NodeIndex,
+        info: EdgeInfo,
+    ) -> Option<EdgeIndex> {
+        (self.graph.contains_node(node_from)
+            & self.graph.contains_node(node_to)
+            & !self.graph.contains_edge(node_from, node_to))
+        .then(|| self.graph.add_edge(node_from, node_to, info))
+    }
+
+    pub fn find_edge(&self, node_from: NodeIndex, node_to: NodeIndex) -> Option<EdgeIndex> {
+        self.graph.find_edge(node_from, node_to)
     }
 
     pub fn debug_dump(&self) -> String {
         format!("{:#?}", self)
     }
 
-    pub fn shortest_path<F>(&self, id_from: NodeIndex, id_to: NodeIndex, edge_cost: F) -> Option<(f32, Path)>
-    where F: FnMut(NodeIndex) -> f32,
+    pub fn shortest_path<F>(
+        &self,
+        node_from: NodeIndex,
+        node_to: NodeIndex,
+        edge_cost: F,
+    ) -> Option<(f32, Path)>
+    where
+        F: FnMut(NodeIndex) -> f32,
     {
         unimplemented!("Stub");
     }
