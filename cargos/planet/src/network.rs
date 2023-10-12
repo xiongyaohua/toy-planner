@@ -1,7 +1,7 @@
-use glm::Vec2;
-use petgraph::prelude as petgraph;
-
 use crate::path::{Path, PathFlow, PathFlowBundle};
+use glm::Vec2;
+use petgraph::algo::astar;
+use petgraph::prelude as pet;
 
 #[derive(Debug)]
 pub struct EdgeInfo {
@@ -18,9 +18,9 @@ pub struct NodeInfo {
     pub position: Vec2,
 }
 
-type Graph = petgraph::StableDiGraph<NodeInfo, EdgeInfo, u32>;
-pub type NodeIndex = petgraph::NodeIndex<u32>;
-pub type EdgeIndex = petgraph::EdgeIndex<u32>;
+type Graph = pet::StableDiGraph<NodeInfo, EdgeInfo, u32>;
+pub type NodeIndex = pet::NodeIndex<u32>;
+pub type EdgeIndex = pet::EdgeIndex<u32>;
 
 /// Abstract network for calculation
 ///
@@ -73,7 +73,7 @@ impl ReducedNetwork {
     where
         F: FnMut(NodeIndex) -> f32,
     {
-        unimplemented!("Stub");
+        !unimplemented!();
     }
 }
 

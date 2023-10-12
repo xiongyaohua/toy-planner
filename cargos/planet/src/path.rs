@@ -12,7 +12,7 @@ pub struct Path {
 impl Path {
     /// Check nodes are simple path of at least 2 valid consequitive nodes in a network.
     pub fn new(nodes: Vec<NodeIndex>, network: &ReducedNetwork) -> Option<Self> {
-        let mut iter = nodes.iter().tuple_windows::<(_, _)>();
+        let iter = nodes.iter().tuple_windows::<(_, _)>();
 
         let edges: Option<Vec<EdgeIndex>> = iter
             .map(|(from, to)| network.find_edge(*from, *to))
@@ -34,6 +34,10 @@ impl Path {
 
     pub fn destination(&self) -> NodeIndex {
         self.destination
+    }
+
+    pub fn edges(&self) -> &Vec<EdgeIndex> {
+        &self.edges
     }
 }
 
@@ -70,6 +74,14 @@ impl PathFlowBundle {
     }
 
     pub fn flow_map(&self) -> HashMap<EdgeIndex, f32> {
-        !unimplemented!()
+        let mut map = HashMap::<EdgeIndex, f32>::new();
+
+        for (path, flow) in self.0.iter() {
+            for &edge in path.edges.iter() {
+                map.entry(edge).and_modify(|f| *f += *flow).or_insert(*flow);
+            }
+        }
+
+        map
     }
 }
