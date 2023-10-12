@@ -2,6 +2,7 @@ use crate::path::{Path, PathFlow, PathFlowBundle};
 use glm::Vec2;
 use petgraph::algo::astar;
 use petgraph::prelude as pet;
+use petgraph::visit::EdgeRef;
 
 #[derive(Debug)]
 pub struct EdgeInfo {
@@ -71,9 +72,18 @@ impl ReducedNetwork {
         edge_cost: F,
     ) -> Option<(f32, Path)>
     where
-        F: FnMut(NodeIndex) -> f32,
+        F: Fn(EdgeIndex) -> f32,
     {
-        !unimplemented!();
+        let estimate_cost = |_node: NodeIndex| 0.0f32;
+
+        astar(
+            &self.graph,
+            node_from,
+            |node: NodeIndex| node == node_to,
+            |edge| edge_cost(edge.id()),
+            estimate_cost,
+        )
+        .map(|(cost, nodes)| (cost, Path::from_nodes(nodes, self).unwrap()))
     }
 }
 

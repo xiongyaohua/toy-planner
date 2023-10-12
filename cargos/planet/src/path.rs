@@ -11,7 +11,7 @@ pub struct Path {
 
 impl Path {
     /// Check nodes are simple path of at least 2 valid consequitive nodes in a network.
-    pub fn new(nodes: Vec<NodeIndex>, network: &ReducedNetwork) -> Option<Self> {
+    pub fn from_nodes(nodes: Vec<NodeIndex>, network: &ReducedNetwork) -> Option<Self> {
         let iter = nodes.iter().tuple_windows::<(_, _)>();
 
         let edges: Option<Vec<EdgeIndex>> = iter
