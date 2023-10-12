@@ -1,6 +1,9 @@
+use std::collections::HashMap;
+
 use crate::path::{Path, PathFlow, PathFlowBundle};
 use glm::Vec2;
 use petgraph::algo::astar;
+use petgraph::graph::Node;
 use petgraph::prelude as pet;
 use petgraph::visit::EdgeRef;
 
@@ -84,6 +87,35 @@ impl ReducedNetwork {
             estimate_cost,
         )
         .map(|(cost, nodes)| (cost, Path::from_nodes(nodes, self).unwrap()))
+    }
+
+    pub fn assignment_flow(&self, od: OD) {
+        !unimplemented!()
+    }
+}
+
+#[derive(Debug)]
+pub struct OD {
+    os: Vec<NodeIndex>,
+    ds: Vec<NodeIndex>,
+    flows: HashMap<(NodeIndex, NodeIndex), f32>,
+}
+
+impl OD {
+    pub fn new(os: Vec<NodeIndex>, ds: Vec<NodeIndex>) -> Self {
+        OD {
+            os,
+            ds,
+            flows: HashMap::new(),
+        }
+    }
+
+    pub fn set_flow(&mut self, o: NodeIndex, d: NodeIndex, flow: f32) {
+        self.flows.insert((o, d), flow);
+    }
+
+    pub fn get_flow(&self, o: NodeIndex, d: NodeIndex) -> Option<f32> {
+        self.flows.get(&(o, d)).copied()
     }
 }
 
