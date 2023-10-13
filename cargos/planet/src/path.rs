@@ -56,6 +56,10 @@ impl PathFlow {
 pub struct PathFlowBundle(HashMap<Path, f32>);
 
 impl PathFlowBundle {
+    pub fn new() -> Self {
+        PathFlowBundle(HashMap::default())
+    }
+
     pub fn add_path(&mut self, path: Path, flow: f32) {
         self.0
             .entry(path)

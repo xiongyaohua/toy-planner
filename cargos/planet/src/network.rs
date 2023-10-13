@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use crate::path::{Path, PathFlow, PathFlowBundle};
 use glm::Vec2;
+use itertools::Itertools;
 use petgraph::algo::astar;
-use petgraph::graph::Node;
 use petgraph::prelude as pet;
 use petgraph::visit::EdgeRef;
 
@@ -64,6 +64,11 @@ impl ReducedNetwork {
         self.graph.find_edge(node_from, node_to)
     }
 
+    pub fn ensure_path(&self, origin: NodeIndex, dest: NodeIndex) -> bool {
+        let path = self.shortest_path(origin, dest, |_edge| 1.0f32);
+        path.is_some()
+    }
+
     pub fn debug_dump(&self) -> String {
         format!("{:#?}", self)
     }
@@ -89,8 +94,13 @@ impl ReducedNetwork {
         .map(|(cost, nodes)| (cost, Path::from_nodes(nodes, self).unwrap()))
     }
 
-    pub fn assignment_flow(&self, od: OD) {
-        !unimplemented!()
+    pub fn assignment_flow(&self, od: &OD) -> PathFlowBundle {
+        let mut bundle = PathFlowBundle::new();
+        for (o, d, flow) in od.iter() {
+            self.shortest_path(o, d, |_edge| 1.0f32)
+            .and_then(|(_cost, path)| Some(bundle.add_path(path, flow) ));
+        }
+        bundle
     }
 }
 
@@ -102,12 +112,15 @@ pub struct OD {
 }
 
 impl OD {
-    pub fn new(os: Vec<NodeIndex>, ds: Vec<NodeIndex>) -> Self {
-        OD {
-            os,
-            ds,
-            flows: HashMap::new(),
-        }
+    pub fn new(os: &[NodeIndex], ds: &[NodeIndex], network: &ReducedNetwork) -> Option<Self> {
+        os.iter()
+            .cartesian_product(ds.iter())
+            .all(|(o, d)| network.ensure_path(*o, *d))
+            .then_some(OD {
+                os: os.into(),
+                ds: ds.into(),
+                flows: HashMap::new(),
+            })
     }
 
     pub fn set_flow(&mut self, o: NodeIndex, d: NodeIndex, flow: f32) {
@@ -116,6 +129,13 @@ impl OD {
 
     pub fn get_flow(&self, o: NodeIndex, d: NodeIndex) -> Option<f32> {
         self.flows.get(&(o, d)).copied()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (NodeIndex, NodeIndex, f32)> + '_ {
+        self.os
+            .iter()
+            .cartesian_product(self.ds.iter())
+            .filter_map(|(&o, &d)| self.flows.get(&(o, d)).map(|flow| (o, d, *flow)))
     }
 }
 
