@@ -1,4 +1,5 @@
 extends Node2D
+class_name Zone
 
 @onready var label_out: Label = $LabelOut
 @onready var label_in: Label = $LabelIn

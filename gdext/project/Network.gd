@@ -12,7 +12,7 @@ class TNode:
 	var is_zone: bool = false
 	var produce: float = 0.0
 	var attract: float = 0.0
-	func _init():
+	func _init() -> void:
 		id = max_id
 		max_id += 1
 
@@ -22,11 +22,11 @@ class TLink:
 	var speed: float = 10.0
 	var length: float = 0.0
 	var id: Vector2i = Vector2i()
-	func _init(p_id: Vector2i):
+	func _init(p_id: Vector2i) -> void:
 		id = p_id
 
 func add_node(p_position: Vector2, p_is_zone: bool = false, p_produce:float=0.0, p_attract:float=0.0) -> TNode:
-	var node = TNode.new()
+	var node := TNode.new()
 	node.position = p_position
 	node.is_zone = p_is_zone
 	node.attract = p_attract
@@ -60,7 +60,7 @@ func add_link(p_from: int, p_to: int, p_capacity: float=3600.0, p_bidirection: b
 		add_link(p_to, p_from, p_capacity, false)
 		return add_link(p_from, p_to, p_capacity, false)
 	
-func has_link(p_from, p_to) -> bool:
+func has_link(p_from: int, p_to: int) -> bool:
 	return _links.has(Vector2i(p_from, p_to))
 	
 func _compute_cost(from_id: int, to_id: int) -> float:
@@ -80,12 +80,12 @@ func bpr(p_flow: float, p_capacity: float) -> float:
 	return 1 + 1.0 * saturation ** 2
 	
 # Assignment related methods
-func update_link_flow():
-	for link in _links.values():
+func update_link_flow() -> void:
+	for link: Network.TLink in _links.values():
 		link.flow = 0.0
 		
-	for od_bundle in _pathes.values():
-		for path in od_bundle:
+	for od_bundle: Dictionary in _pathes.values():
+		for path: PackedInt32Array in od_bundle:
 			var path_flow: float = od_bundle[path]
 			
 			for i in range(path.size() - 1):

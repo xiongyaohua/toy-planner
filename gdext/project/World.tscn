@@ -10,6 +10,8 @@ colors = PackedColorArray(1.29953e-06, 0.824145, 0.190156, 1, 0.933333, 0.984314
 script = ExtResource("1_yjpnd")
 NODE_COLOR = Color(0.168627, 0.180392, 0.384314, 1)
 LINK_COLOR = SubResource("Gradient_rfdgx")
+NODE_SIZE = null
+LINK_WIDTH = null
 metadata/_edit_lock_ = true
 
 [node name="Zones" type="Node2D" parent="."]

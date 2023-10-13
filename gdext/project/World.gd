@@ -13,7 +13,7 @@ extends Node2D
 @export var LINK_WIDTH: float = 20.0
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	var node0 := _network.add_node(Vector2(100, 100), true, 3000.0, 4000.0)	
 	var node1 := _network.add_node(Vector2(700, 100))	
 	var node2 := _network.add_node(Vector2(700, 600), true, 5000.0, 6000.0)	
@@ -36,7 +36,7 @@ func _ready():
 	update_zones()
 	
 	var path := _network.get_point_path(node0.id, node3.id)
-	var pathflow := PathFlow.instantiate()
+	var pathflow: PathFlow = PathFlow.instantiate()
 	pathflow.set_path(path, 20.0)
 	_pathes.add_child(pathflow)
 	
@@ -46,32 +46,32 @@ func _ready():
 	_pathes.add_child(pathflow)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(delta: float) -> void:
 	pass
 
 func _draw() -> void:
-	for link in _network._links.keys():
+	for link: Vector2i in _network._links.keys():
 		var pos1: Vector2 = _network._nodes[link.x].position
 		var pos2: Vector2 = _network._nodes[link.y].position
 		# Offset
 		var side := (pos2 - pos1).normalized().orthogonal()
-		var capacity = _network._links[link].capacity
+		var capacity: float = _network._links[link].capacity
 		var link_width: float = LINK_WIDTH * (capacity / 3600.0)
-		var flow = _network._links[link].flow
-		var saturation = flow / capacity
+		var flow: float = _network._links[link].flow
+		var saturation := flow / capacity
 		var link_color: Color = LINK_COLOR.sample(saturation)
 		draw_line(pos1+side*11.0, pos2+side*11.0, link_color, link_width)
 	
-	for node in _network._nodes.values():
+	for node: Network.TNode in _network._nodes.values():
 		draw_circle(node.position, NODE_SIZE, NODE_COLOR)
 
 func update_zones() -> void:
 	for zone in _zones.get_children():
 		zone.queue_free()
 		
-	for node in _network._nodes.values():
+	for node: Network.TNode in _network._nodes.values():
 		if node.is_zone:
-			var zone := Zone.instantiate()
+			var zone: Zone = Zone.instantiate()
 			# Must added before setting properties
 			_zones.add_child(zone)
 			zone.position = node.position
