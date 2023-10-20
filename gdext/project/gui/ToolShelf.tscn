@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://ccg5nt0njwmv6"]
+
+[sub_resource type="GDScript" id="GDScript_oe7p2"]
+script/source = "extends VBoxContainer
+
+func _ready() -> void:
+	for child: Button in get_children():
+		child.pressed.connect(_button_pressed.bind(child))
+		
+func _button_pressed(p_button: Button) -> void:
+	print(p_button.text)
+"
+
+[sub_resource type="GDScript" id="GDScript_bpfjo"]
+script/source = "extends Tool
+"
+
+[sub_resource type="GDScript" id="GDScript_wmkm6"]
+script/source = "extends Tool
+"
+
+[sub_resource type="GDScript" id="GDScript_g23hx"]
+script/source = "extends Tool
+"
+
+[node name="ToolShelf" type="VBoxContainer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -324.0
+offset_right = 77.0
+offset_bottom = -124.0
+grow_vertical = 2
+script = SubResource("GDScript_oe7p2")
+
+[node name="Navigate" type="Button" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+text = "Navigate"
+script = SubResource("GDScript_bpfjo")
+
+[node name="Build" type="Button" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+text = "Build"
+script = SubResource("GDScript_wmkm6")
+
+[node name="Modify" type="Button" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+text = "Modify"
+script = SubResource("GDScript_g23hx")
